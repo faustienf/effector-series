@@ -25,14 +25,26 @@ class Deferred {
   }
 }
 
+/**
+ * @example
+ * sample({
+ *   clock: requestFx,
+ *   fn: () => ['Message 1', 'Message 2'],
+ *   target: series(notifyFx),
+ * });
+ *
+ * ➜ notifyFx('Message 1')
+ * ➜ notifyFx('Message 2')
+ */
 export const series = <T>(
   target: Event<T> | Effect<T, any>,
   options: Partial<Options> = {}
 ): Effect<T[], void> => {
   const awaitTarget = is.effect(target) && options.await;
+  let deferred: Deferred;
+
   const pop = createEvent<any>();
 
-  let deferred: Deferred;
   const pushFx = createEffect((seriesParams: T[]) => {
     seriesParams; // fake use var
     deferred = new Deferred();
