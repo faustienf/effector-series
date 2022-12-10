@@ -1,19 +1,12 @@
 # ☄️ effector-series
 
 ```ts
-const requestFx = createEffect((messages) => Promise.resolve(messages));
-
-const notifyFx = createEffect(async (message) => {
-  console.log(message);
-});
-
 sample({
-  clock: requestFx,
+  clock: requestFx.doneData,
+  fn: () => ['Message 1', 'Message 2'],
   target: series(notifyFx),
 });
 
-requestFx(['Message 1', 'Message 2']);
-// Log:
-// ➜ Message 1
-// ➜ Message 2
+// ➜ notifyFx('Message 1')
+// ➜ notifyFx('Message 2')
 ```
